@@ -1,5 +1,3 @@
-
-
 FROM openjdk:7-jdk
 MAINTAINER Manuel de la Peña <manuel.delapenya@liferay.com>
 
@@ -10,7 +8,7 @@ ENV TOMCAT_HOME=/opt/apache-tomcat-$TOMCAT_VERSION
 
 # Prepare the installation of mysql-server and tomcat 7
 RUN apt-get update && apt-get install -y lsb-release && \
-  wget https://dev.mysql.com/get/mysql-apt-config_0.8.4-1_all.deb && \
+  wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb && \
   dpkg -i mysql-apt-config_0.8.13-1_all.deb && rm -f mysql-apt-config_0.8.13-1_all.deb && \
   mkdir -p $TOMCAT_HOME && cd /opt && \
   wget https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-$TOMCAT_MAJOR_VERSION/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
