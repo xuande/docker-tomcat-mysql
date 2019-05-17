@@ -1,3 +1,6 @@
+
+
+
 FROM openjdk:7-jdk
 MAINTAINER Manuel de la Peña <manuel.delapenya@liferay.com>
 
@@ -7,12 +10,25 @@ ENV TOMCAT_VERSION=7.0.94
 ENV TOMCAT_HOME=/opt/apache-tomcat-$TOMCAT_VERSION
 
 # Prepare the installation of mysql-server and tomcat 7
-RUN apt-get update && apt-get install -y lsb-release && \
-  wget https://dev.mysql.com/get/mysql-apt-config_0.8.4-1_all.deb && \
-  dpkg -i mysql-apt-config_0.8.4-1_all.deb && rm -f mysql-apt-config_0.8.4-1_all.deb && \
-  mkdir -p $TOMCAT_HOME && cd /opt && \
+RUN mkdir -p $TOMCAT_HOME && cd /opt && \
   wget https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-$TOMCAT_MAJOR_VERSION/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   tar -xvf apache-tomcat-$TOMCAT_VERSION.tar.gz && rm -f apache-tomcat-$TOMCAT_VERSION.tar.gz
+
+RUN set -ex; \
+# gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
+	key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+	gpg --batch --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
+	gpgconf --kill all; \
+	rm -rf "$GNUPGHOME"; \
+	apt-key list > /dev/null
+
+ENV MYSQL_MAJOR 5.6
+ENV MYSQL_VERSION 5.6.44-1debian9
+
+RUN echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-${MYSQL_MAJOR}" > /etc/apt/sources.list.d/mysql.list
+
 
 # Install packages
 RUN apt-get update && \
