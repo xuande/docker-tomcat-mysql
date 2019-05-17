@@ -1,6 +1,3 @@
-
-
-
 FROM openjdk:7-jdk
 MAINTAINER Manuel de la Peña <manuel.delapenya@liferay.com>
 
